@@ -263,3 +263,116 @@ class DomeSync(Dome):
         """
 
 
+class DomeFan(Dome):
+    """
+    Dome with fans
+
+    """
+
+    def get_model(self):
+        """
+        @return: the fan model
+        @:rtype: string
+        """
+
+
+    def set_model(self, model):
+        """
+        sets the the fan model
+        :param model: the fan model
+        :param type: string
+
+        """
+
+
+    def get_fan_number(self):
+        """
+        gets the fan installation number
+        :return: fan number
+        :rtype: int
+        """
+
+
+    def set_fan_number(self, number):
+        """
+        sets the fan installation number
+        @:param: fan number
+        @:type: int
+        """
+
+
+    def get_Az(self):
+        """
+        gets the fan's Azimuth in decimal degrees
+        @:return: Az in degrees
+        $:rtype: Coord, int or float
+
+
+        """
+
+    def set_Az(self, az):
+        """
+        sets the fan's Azimuth in decimal degrees
+        @:param az: Azimuth in decimal degrees
+        @type az: Coord, int or float
+
+        """
+
+    def get_frequency(self):
+        """
+        gets the rotation of the fan in rpm
+        """
+
+
+    def set_frequency(self, frequency):
+        """
+        sets the rotation of the fan in rpm
+        @:param frequency: frequency in rpm
+        @:type : int
+        """
+
+
+    def get_timer(self):
+        """
+        gets the stored value of the timer in hours
+        @:return: timer value in hours
+        #:type: float
+        """
+
+
+    def set_timer(self, timer):
+        """
+        sets the stored value of the timer in hours
+        @:param timer: the timer value to store
+        @:type: float
+        """
+
+
+    def set_trigger_temp(self, temp):
+        """
+       Sets the temperature which activates the fan
+       @:param temp: temperature to trigger this fan
+       @type: int
+
+        """
+
+    def is_on(self):
+        """
+        checks if the dome fan is on
+        @return True if the fan is on
+        @type bool
+        """
+
+    def power_on(self):
+        """
+        turns the dome fan on
+        @return None
+
+        """
+
+    def power_off(self):
+        """
+        turns the dome fan off
+        @return None
+        """
+
