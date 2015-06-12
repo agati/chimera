@@ -30,7 +30,7 @@ class ModBusCtl(Interface):
     def setup_client(ip):
         """
 
-        :param ip: 192.168.10.100
+        :param example ip: 192.168.10.100
         :return:True
         """
 
