@@ -220,11 +220,12 @@ class SKDrv(ModbusTcpClient):
             print "parm42 changed"
             parm_change.append('parm42')
         print "*****************************"
+        any_key = raw_input("Press [ENTER] to continue...")
 
         return parm_change
 
     def check_rotation(self):
-        #self.os.system('cls' if os.name == 'nt' else 'clear')
+
         """
         read the motor rotation in rpm
         """
