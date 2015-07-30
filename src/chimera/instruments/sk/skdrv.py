@@ -241,26 +241,40 @@ class SKDrv(ModbusTcpClient):
         return
 
 
-    def start(ip):
+    def forward(self):
         """
-        choose a direction and starts the motor fan indicated by its IP
+        run forward the motor fan indicated by its IP
         :return:
         """
+        print"..forward..."
+        return
 
-    def stop(ip):
+    def stop(self):
         """
         stops de motor fan indicated by its IP
-        :param ip:
+
         TODO
         :return:
         """
+        print"..stop..."
+        return
 
-    def set_timer(self):
+    def reverse(self):
+        """
+        run reverse the motor fan indicated by its IP
+        :return:
+        """
+        print"..reverse..."
+        return
+
+    def timer(self):
         """
         defines an interval of time to mantain the motor running
         TODO
         :return:
         """
+        print"..set timer..."
+        return
 
     def check_timer(self):
         """
@@ -268,3 +282,15 @@ class SKDrv(ModbusTcpClient):
         TODO
         :return:
         """
+        print"..check timer..."
+        return
+
+    def treshold(self):
+        """
+        run forward the motor fan indicated by its IP if the inner temperature is above a treshold pre-defined
+        value
+        its IP
+        :return:
+        """
+        print"..treshold..."
+        return

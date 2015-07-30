@@ -15,9 +15,10 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 # 02110-1301, USA.
 # *******************************************************************
-# This driver is intended to be used with the Emerson Commander SK
-# order number SKBD200110 - 23/07/2015 - salvadoragati@gmail.com
+# This script is intended to be used with the Emerson Commander SK
+# order number SKBD200110 - 23/06/2015 - salvadoragati@gmail.com
 
+# from chimera.src.chimera.instruments.sk.skdrv import SKDrv
 import os
 
 from skdrv import SKDrv
@@ -28,7 +29,7 @@ def controller_menu():
     os.system('cls' if os.name == 'nt' else 'clear')
 
     print "***************************************"
-    print "*** Commander SK Controller Menu ******"
+    print "*** Commander SK Control Manager ******"
     print "***************************************"
 
     print"Choose the controller number :"
@@ -36,7 +37,7 @@ def controller_menu():
     print "1-IP:192.168.30.104 - Eastern"
     print "2-IP:192.168.30.105 - Western"
     print "3-Exit"
-    key = raw_input("Choice (1/2/3):")
+    key = raw_input("Choice:(1/2/3)")
     if key == '1':
         ip = '192.168.30.104'
         return ip
@@ -49,68 +50,36 @@ def controller_menu():
         return ip
 
 
-def command_menu(ip, sk):
+def main_menu(ip):
     os.system('cls' if os.name == 'nt' else 'clear')
-    while 1:
-        print "***************************************"
-        print "***  Commander SK Command Menu   ******"
-        print "***************************************"
-        print " ip: ", ip
-        print""
-        print "1-Check rotation"
-        print "2-Run Forward"
-        print "3-Stop"
-        print "4-Run Reverse"
-        print "5-Timer"
-        print "6-Automatic Start by Temperature Treshold"
-        print "7-Controller Menu"
-
-        action = raw_input("Choice (1/2/3/4/5/6/7):")
-        if action == '1':
-            os.system('cls' if os.name == 'nt' else 'clear')
-            print " ip: ", ip
-            sk.check_rotation()
-
-        if action == '2':
-            os.system('cls' if os.name == 'nt' else 'clear')
-            print " ip: ", ip
-            sk.forward()
-
-        if action == '3':
-            os.system('cls' if os.name == 'nt' else 'clear')
-            print " ip: ", ip
-            sk.stop()
-
-        if action == '4':
-            os.system('cls' if os.name == 'nt' else 'clear')
-            print " ip: ", ip
-            sk.reverse()
-
-        if action == '5':
-            os.system('cls' if os.name == 'nt' else 'clear')
-            print " ip: ", ip
-            sk.timer()
-
-        if action == '6':
-            os.system('cls' if os.name == 'nt' else 'clear')
-            print " ip: ", ip
-            sk.treshold()
-
-        if action == '7':
-            return
+    print "***************************************"
+    print "*** Commander SK Control Manager ******"
+    print "***************************************"
+    print " ip: ", ip
+    print"Choose command:"
+    print""
+    print "1-Check rotation"
+    print "2-Start"
+    print "3-Stop"
+    print "4-Timer"
+    print "5-Automatic Start by Temperature Treshold"
+    print "6-Restart"
+    action = raw_input("(1/2/3/4/5/6)")
+    return action
 
 
-# end of auxiliary functions
-#**************************************************************
-
-
-#this is the main loop routine of the Commander SK Control Manager
-
+# main menu
 while 1:
     data = 0
     os.system('cls' if os.name == 'nt' else 'clear')
     ip = controller_menu()
     if ip == '': exit()
+
+
+
+    #ip='192.168.30.104'
+    #ip='192.168.30.105'
+    #ip='127.0.0.1'
     sk = SKDrv()
     sk.host = ip
 
@@ -122,20 +91,26 @@ while 1:
         if len(changes) > 0:
             print "Changes on basic parameters detected!:", changes
             key = raw_input("Continue anyway? (y/n)")
+
             if key != "y":
                 sk.close()
                 del sk
                 exit()
 
-        #the controller is well configured. Starting the comand menu
-        command = command_menu(ip, sk)
-
-
+        #starts the main menu
+        action = main_menu(ip)
+        print "action=", action
+        if action == '1':
+            data = sk.check_rotation()
+        action = main_menu(ip)
 
 
     except Exception:
         print"failed to connect to ip:", ip
-        sk.close()
-        del sk
-        any_key = raw_input("Press [ENTER] to continue...")
+
+    sk.close()
+    del sk
+    exit()
+
+
 

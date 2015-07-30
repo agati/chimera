@@ -24,16 +24,16 @@ import os.path
 import logging
 import shutil
 
-from chimera.core.constants import (SYSTEM_CONFIG_DIRECTORY,
-                                    SYSTEM_CONFIG_DEFAULT_FILENAME,
-                                    SYSTEM_CONFIG_DEFAULT_SAMPLE,
-                                    SYSTEM_CONFIG_LOG_NAME)
+from chimera.src.chimera.core.constants import (SYSTEM_CONFIG_DIRECTORY,
+                                                SYSTEM_CONFIG_DEFAULT_FILENAME,
+                                                SYSTEM_CONFIG_DEFAULT_SAMPLE,
+                                                SYSTEM_CONFIG_LOG_NAME)
+
 
 logging.getLogger().setLevel(logging.DEBUG)
 
 
 def init_sysconfig():
-
     if not os.path.exists(SYSTEM_CONFIG_DIRECTORY):
         try:
             logging.info(
@@ -60,5 +60,6 @@ def init_sysconfig():
         except IOError, e:
             logging.error(
                 "Couldn't create initial log file %s (%s)" % (SYSTEM_CONFIG_LOG_NAME, e))
+
 
 init_sysconfig()
