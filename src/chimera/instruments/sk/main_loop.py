@@ -17,7 +17,7 @@
 # *******************************************************************
 # This driver is intended to be used with the Emerson Commander SK
 # order number SKBD200110 -  salvadoragati@gmail.com
-# start: 23/07/2015 - last update:30/07/2015
+# start: 23/07/2015 - last update:23/10/2015
 
 
 import os
@@ -65,7 +65,7 @@ def command_menu(ip, sk):
         print "3-Stop"
         print "4-Run Reverse"
         print "5-Timer"
-        print "6-Automatic Start by Temperature Treshold"
+        print "6-Automatic Start by Temperature Threshold"
         print "7-Setup"
         print "8-Model"
         print "9-Number"
@@ -73,7 +73,7 @@ def command_menu(ip, sk):
         print "11-Reset Drive"
         print "12-Return to Controller Menu"
 
-        action = raw_input("Choice (0/1/2/3/4/5/6/7/12):")
+        action = raw_input("Choice (0/1/2/3/4/5/6/7/8/9/10/11/12):")
 
         if action == '0':
             os.system('cls' if os.name == 'nt' else 'clear')
