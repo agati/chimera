@@ -16,7 +16,9 @@
 # 02110-1301, USA.
 # *******************************************************************
 # This driver is intended to be used with the Emerson Commander SK
-# order number SKBD200110 - 23/07/2015 - salvadoragati@gmail.com
+# order number SKBD200110 -  salvadoragati@gmail.com
+# start: 23/07/2015 - last update:30/07/2015
+
 
 import os
 
@@ -57,46 +59,106 @@ def command_menu(ip, sk):
         print "***************************************"
         print " ip: ", ip
         print""
-        print "1-Check rotation"
+        print "0-Check Basics"
+        print "1-Check Rotation"
         print "2-Run Forward"
         print "3-Stop"
         print "4-Run Reverse"
         print "5-Timer"
         print "6-Automatic Start by Temperature Treshold"
-        print "7-Controller Menu"
+        print "7-Setup"
+        print "8-Model"
+        print "9-Number"
+        print "10-Save Drive Configs"
+        print "11-Reset Drive"
+        print "12-Return to Controller Menu"
 
-        action = raw_input("Choice (1/2/3/4/5/6/7):")
+        action = raw_input("Choice (0/1/2/3/4/5/6/7/12):")
+
+        if action == '0':
+            os.system('cls' if os.name == 'nt' else 'clear')
+            print " ip: ", ip
+            check = sk.check_basic()
+            print"Check basic=", check
+            any_key = raw_input("Press [ENTER] to continue...")
+
         if action == '1':
             os.system('cls' if os.name == 'nt' else 'clear')
             print " ip: ", ip
-            sk.check_rotation()
+            rot = sk.check_rotation()
+            print"rotation=", rot
+            any_key = raw_input("Press [ENTER] to continue...")
 
         if action == '2':
             os.system('cls' if os.name == 'nt' else 'clear')
             print " ip: ", ip
-            sk.forward()
+            forw = sk.forward()
+            print"forward=", forw
+            any_key = raw_input("Press [ENTER] to continue...")
+
 
         if action == '3':
             os.system('cls' if os.name == 'nt' else 'clear')
             print " ip: ", ip
-            sk.stop()
+            stp = sk.stop()
+            print"stop=", stp
+            any_key = raw_input("Press [ENTER] to continue...")
+
 
         if action == '4':
             os.system('cls' if os.name == 'nt' else 'clear')
             print " ip: ", ip
-            sk.reverse()
+            print"Reverse function implemented but not used in this version"
+            any_key = raw_input("Press [ENTER] to continue...")
 
         if action == '5':
             os.system('cls' if os.name == 'nt' else 'clear')
             print " ip: ", ip
-            sk.timer()
+            print"Timer function not implemented in this version"
+            any_key = raw_input("Press [ENTER] to continue...")
 
         if action == '6':
             os.system('cls' if os.name == 'nt' else 'clear')
             print " ip: ", ip
-            sk.treshold()
+            print"Treshold function not implemented in this version"
+            any_key = raw_input("Press [ENTER] to continue...")
 
         if action == '7':
+            os.system('cls' if os.name == 'nt' else 'clear')
+            print " ip: ", ip
+            setup = sk.setup()
+            print"setup=", setup
+            any_key = raw_input("Press [ENTER] to continue...")
+
+        if action == '8':
+            os.system('cls' if os.name == 'nt' else 'clear')
+            print " ip: ", ip
+            model = sk.get_order_number()
+            print"model=", model
+            any_key = raw_input("Press [ENTER] to continue...")
+
+        if action == '9':
+            os.system('cls' if os.name == 'nt' else 'clear')
+            print " ip: ", ip
+            ip_number = sk.get_ip()
+            print"Number=", ip_number
+            any_key = raw_input("Press [ENTER] to continue...")
+
+        if action == '10':
+            os.system('cls' if os.name == 'nt' else 'clear')
+            print " ip: ", ip
+            save_config = sk.save()
+            print"Save configs=", save_config
+            any_key = raw_input("Press [ENTER] to continue...")
+
+        if action == '11':
+            os.system('cls' if os.name == 'nt' else 'clear')
+            print " ip: ", ip
+            reset_drive = sk.reset()
+            print"Reset Drive=", reset_drive
+            any_key = raw_input("Press [ENTER] to continue...")
+
+        if action == '12':
             return
 
 

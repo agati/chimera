@@ -1,23 +1,35 @@
 #! /usr/bin/env python
 # -*- coding: iso-8859-1 -*-
-# Copyright (C) 2006-2015 chimera - observatory automation system
+# chimera - observatory automation system
+# Copyright (C) 2006-2015  P. Henrique Silva <henrique@astro.ufsc.br>
+# Copyright (C) 2015  Salvador Sergi Agati <salvadoragati@gmail.com>
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
 # as published by the Free Software Foundation; either version 2
 # of the License, or (at your option) any later version.
-
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 # 02110-1301, USA.
+# ****************************************************************
+# Copyright (C) 2015 Salvador S. Agati <salvadoragati@gmail.com> *
+# #grant #2015/06983-1, São Paulo Research Foundation (FAPESP).  *
+# Opinions, assumptions and conclusions or recommendations       *
+# expressed in this material by Salvador Sergi Agati are his     *
+# responsibility and do not necessarily reflect the              *
+# views of FAPESP.                                               *
+# *****************************************************************
 # *******************************************************************
-# This driver is intended to be used with the Emerson Commander SK
-# order number SKBD200110 - 15/06/2015 - salvadoragati@gmail.com
+# This driver is intended to be used with the Emerson Commander SK  *
+# order number SKBD200110 -  salvadoragati@gmail.com                *
+# start:15/06/2015 - last update: 07/10/2015                        *
+# ********************************************************************
 
+
+import time
 
 from pymodbus.client.sync import ModbusTcpClient
 
@@ -26,6 +38,8 @@ class SKDrv(ModbusTcpClient):
     #initial variables setup - This setup is the original setup that was defined at the installation time.
     #It is the same for both Commander SK drives.
     # If you are planning to change these parameters, see Application Note CTAN#293
+    #At the moment, no chimera object added to this class. It must be checked if as a driver, it is needed.
+    # You have to have Pymodbus module previously installed to this driver work properly.
 
     ip = ''  #change to the corresponding ip number of your network installed commander SK
     min_speed = ''  #Hz parm1
@@ -34,19 +48,24 @@ class SKDrv(ModbusTcpClient):
     dec_rate = ''  #s/100 Hz parm4
     motor_rated_speed = 0  #rpm parm7 -attention: the ctsoft original parm is 1800 rpm
     motor_rated_voltage = 230  #V parm 8
-    motor_power_factor = ''  # parm 9 it can be changed for the motors's nameplate value if it is known
-    #Its is the motor cos() and 0.5<motor_power_factor<0.97.
+    motor_power_factor = ''  # parm 9 it can be changed for the motor's nameplate value if it is known
+    #It is the motor cos() and 0.5<motor_power_factor<0.97.
     ramp_mode = 2  #  parm 30 Standard Std (2) without dynamic braking resistor, If with this resistor, should set to 0 or
     # Fast
     dynamicVtoF = 'OFF'  # parm 32 - It should not be used when the drive is being used as a soft start to full speed. keep off
     voltage_mode_select = 2  #parm 41  fixed boost mode(2)
     low_freq_voltage_boost = 1  #parm 42  0.5< low_freq_voltage_boost<1
 
+    order_number = 'SKBD200110'
+
     __config__ = {'ip': '127.0.0.1', 'min_speed': 0, 'max_speed': 600, 'acc_rate': 50, 'dec_rate': 100,
                   'motor_rated_speed': 1800,
                   'motor_rated_voltage': 230, 'motor_power_factor': 85, 'ramp_mode': 1, 'dynamicVtoF': 1,
                   'voltage_mode_select': 2,
                   'low_freq_voltage_boost': 10}
+
+    def get_order_number(self):
+        return self.order_number
 
 
     def read_parm(self, parm):
@@ -76,221 +95,198 @@ class SKDrv(ModbusTcpClient):
         else:
             return False
 
+    def get_ip(self):
+        ip = str(self.read_parm('15.10')) + '.' + str(self.read_parm('15.11')) + '.' + str(
+            self.read_parm('15.12')) + '.' + str(
+            self.read_parm('15.13'))
+        return ip
+
 
     def check_basic(self):
 
         parm_change = []
 
-
         #check parm1
-
         parm1 = self.read_parm('00.01')
-        print "parm1=", parm1
         min_speed = self.__config__['min_speed']
-        print "min_speed=", min_speed
-        if parm1 == min_speed:
-            print "parm1 ok"
-        else:
-            print "parm1 changed"
-            parm_change.append('parm1')
-        print "*****************************"
+        if parm1 != min_speed:
+            parm_change.append('00.01:min_speed')
 
         # check parm2
-
         parm2 = self.read_parm("00.02")
-        print "parm2=", parm2
         max_speed = self.__config__['max_speed']
-        print "max_speed=", max_speed
-        if parm2 == max_speed:
-            print "parm2 ok"
-        else:
-            print "parm2 changed"
-            parm_change.append('parm2')
-        print "*****************************"
-
+        if parm2 != max_speed:
+            parm_change.append('00.02:max_speed')
 
         #check parm3
-
         parm3 = self.read_parm("00.03")
-        print "parm3=", parm3
         acc_rate = self.__config__['acc_rate']
-        print "acc_rate=", acc_rate
-        if parm3 == acc_rate:
-            print "parm3 ok"
-        else:
-            print "parm3 changed"
-            parm_change.append('parm3')
-        print "*****************************"
-
+        if parm3 != acc_rate:
+            parm_change.append('00.03:acc_rate')
 
         #check parm4
-
         parm4 = self.read_parm("00.04")
-        print "parm4=", parm4
         dec_rate = self.__config__['dec_rate']
-        print "dec_rate=", dec_rate
-        if parm4 == dec_rate:
-            print "parm4 ok"
-        else:
-            print "parm4 changed"
-            parm_change.append('parm4')
-        print "*****************************"
+        if parm4 != dec_rate:
+            parm_change.append('00.04:dec_rate')
 
         #check parm7
         parm7 = self.read_parm("00.07")
-        print "parm7=", parm7
         motor_rated_speed = self.__config__['motor_rated_speed']
-        print "motor_rated_speed=", motor_rated_speed
-        if parm7 == motor_rated_speed:
-            print "parm7 ok"
-        else:
-            print "parm7 changed"
-            parm_change.append('parm7')
-        print "*****************************"
+        if parm7 != motor_rated_speed:
+            parm_change.append('00.07:motor_rated_speed')
 
         #check parm8
         parm8 = self.read_parm("00.08")
-        print "parm8=", parm8
         motor_rated_voltage = self.__config__['motor_rated_voltage']
-        print "motor_rated_voltage=", motor_rated_voltage
-        if parm8 == motor_rated_voltage:
-            print "parm8 ok"
-        else:
-            print "parm8 changed"
-            parm_change.append('parm8')
-        print "*****************************"
+        if parm8 != motor_rated_voltage:
+            parm_change.append('00.08:motor_rated_voltage')
 
         #check parm9
         parm9 = self.read_parm("00.09")
-        print "parm9=", parm9
         motor_power_factor = self.__config__['motor_power_factor']
-        print "motor_power_factor=", motor_power_factor
-        if parm9 == motor_power_factor:
-            print "parm9 ok"
-        else:
-            print "parm9 changed"
-            parm_change.append('parm9')
-        print "*****************************"
-
+        if parm9 != motor_power_factor:
+            parm_change.append('00.09:motor_power_factor')
 
         #check parm30
         parm30 = self.read_parm("00.30")
-        print "parm30=", parm30
         ramp_mode = self.__config__['ramp_mode']
-        print "ramp_mode=", ramp_mode
-        if parm30 == ramp_mode:
-            print "parm30 ok"
-        else:
-            print "parm30 changed"
-            parm_change.append('parm30')
-        print "*****************************"
+        if parm30 != ramp_mode:
+            parm_change.append('00.30:ramp_mode')
 
         #check parm32
         parm32 = self.read_parm("00.32")
-        print "parm32=", parm32
         dynamicVtoF = self.__config__['dynamicVtoF']
-        print "dynamicVtoF=", dynamicVtoF
-        if parm32 == dynamicVtoF:
-            print "parm32 ok"
-        else:
-            print "parm32 changed"
-            parm_change.append('parm32')
-        print "*****************************"
+        if parm32 != dynamicVtoF:
+            parm_change.append('00.32:dynamicVtoF')
 
         #check parm41
         parm41 = self.read_parm("00.41")
-        print "parm41=", parm41
         voltage_mode_select = self.__config__['voltage_mode_select']
-        print "voltage_mode_select=", voltage_mode_select
-        if parm41 == voltage_mode_select:
-            print "parm41 ok"
-        else:
-            print "parm41 changed"
-            parm_change.append('parm41')
-        print "*****************************"
+        if parm41 != voltage_mode_select:
+            parm_change.append('00.41:voltage_mode_select')
 
         #check parm42
         parm42 = self.read_parm("00.42")
-        print "parm42=", parm42
         low_freq_voltage_boost = self.__config__['low_freq_voltage_boost']
-        print "low_freq_voltage_boost=", low_freq_voltage_boost
-        if parm42 == low_freq_voltage_boost:
-            print "parm42 ok"
-        else:
-            print "parm42 changed"
-            parm_change.append('parm42')
-        print "*****************************"
-        any_key = raw_input("Press [ENTER] to continue...")
+        if parm42 != low_freq_voltage_boost:
+            parm_change.append('00.42:low_freq_voltage_boost')
 
         return parm_change
+
+
+    def setup(self):
+        """
+        Defines some controller's presets and assures that the minimal remote control parameters are defined.
+
+        self.write_parm('01.21',10)#preset1= 10 Hz - adjust this to the desired nominal working speed
+        self.write_parm('01.15',1)#presets speed selector to 1
+        self.write_parm('01.14',3)#changes reference selector to preset
+        self.write_parm('06.40',0)#enables sequence latcher=off
+        self.write_parm('06.43',1)#enables control word
+
+        """
+
+        if self.write_parm('01.21', 10) and self.write_parm('01.15', 1) and self.write_parm('01.14',
+                                                                                            3) and self.write_parm(
+                '06.40', 0) and self.write_parm('06.43', 1):
+            return True
+
+        return False
+
 
     def check_rotation(self):
 
         """
-        read the motor rotation in rpm
+        reads the motor rotation in rpm
         """
-        print"checking rotation..."
-        rotation = self.read_parm('05.04')  # motor speed in rpm
-        print "rotation is:", rotation
-        if rotation > 0:
-            print"The motor fan is on , running at", rotation, "rpm"
-        else:
-            print"The motor fan is off"
-            any_key = raw_input("Press [ENTER] to continue...")
 
-        return
+        rotation = self.read_parm('05.04')  # motor speed in rpm
+        return rotation
+
 
 
     def forward(self):
         """
-        run forward the motor fan indicated by its IP
-        :return:
+        runs the motor fan forward
         """
-        print"..forward..."
-        return
+
+        if self.write_parm('06.42', 131):  # run forward
+            return True
+
+        return False
+
 
     def stop(self):
         """
-        stops de motor fan indicated by its IP
-
-        TODO
-        :return:
+        stops de motor fan
         """
-        print"..stop..."
-        return
+        if self.write_parm('06.42', 129):  # stop
+            return True
+
+        return False
 
     def reverse(self):
         """
-        run reverse the motor fan indicated by its IP
-        :return:
-        """
-        print"..reverse..."
-        return
+        runs reverse the motor fan
 
-    def timer(self):
         """
-        defines an interval of time to mantain the motor running
-        TODO
-        :return:
-        """
-        print"..set timer..."
-        return
+        if self.write_parm('06.42', 137):  # run reverse
+            return True
 
-    def check_timer(self):
-        """
-        check the timer values
-        TODO
-        :return:
-        """
-        print"..check timer..."
-        return
+        return False
 
-    def treshold(self):
+
+    def reset(self):
         """
-        run forward the motor fan indicated by its IP if the inner temperature is above a treshold pre-defined
-        value
-        its IP
+        remotely resets the controller
+        """
+        if self.write_parm('10.33', 1):  # drive reset
+            time.sleep(1)  # necessary delay to force logical reset level high during 1 second
+            if self.write_parm('10.33', 0):
+                return True
+            else:
+                return False
+
+        return False
+
+    def enableCW(self):
+        """
+        enables Control Word usage
+        """
+        if not self.write_parm('06.43', 1):  # enables CW
+            return False
+        if not self.write_parm('06.42', 128):  # mantains it in auto mode
+            return False
+
+        return True
+
+
+    def disableCW(self):
+        """
+        disables Control Word usage
+        """
+        if not self.write_parm('06.42', 129):  # stops the motor fan
+            return False
+        if not self.write_parm('06.42', 128):  # mantain its in auto
+            return False
+        if not self.write_parm('06.43', 0):  # disables CW
+            return False
+
+        return True
+
+
+    def save(self):
+        """
+        saves the data and resets the controller
         :return:
         """
-        print"..treshold..."
-        return
+        if self.write_parm('11.00', 1000):  # saves the data
+            if self.reset():  # resets the drive
+                return True
+            else:
+                return False
+
+        return False
+
+
