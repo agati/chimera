@@ -23,6 +23,7 @@
 import sys
 
 from chimera.core.cli import ChimeraCLI, action
+from chimera.interfaces.weatherstation import WeatherStation
 
 
 class ChimeraWheater(ChimeraCLI):
@@ -44,55 +45,30 @@ class ChimeraWheater(ChimeraCLI):
             helpGroup="INFO",
             help="Displays available parameters names and its respective values.")
     def info(self, options):
-        self.out("i Choosen", end="")
+        self.out("=" * 40)
+        self.out("Weather Station Parameters and Values:", end="\n")
+
+        humidity = 60
+        temperature = 12
+        wind_speed = 5.7
+        wind_direction = 35
+        dew_point = 6
+        pressure = 13
+        rain = 3
+
+        self.out("humidity=" + str(humidity) + " " + str(WeatherStation.__config__["humidity_unit"]))
+        self.out("temperature=" + str(temperature) + " " + str(WeatherStation.__config__["temperature_unit"]))
+        self.out("wind_speed=" + str(wind_speed) + " " + str(WeatherStation.__config__["wind_unit"]))
+        self.out("wind_direction=" + str(wind_direction) + " " + "DEGREES")
+        self.out("dew_point=" + str(dew_point) + " " + str(WeatherStation.__config__["dew_point_unit"]))
+        self.out("pressure=" + str(pressure) + " " + str(WeatherStation.__config__["pressure_unit"]))
+        self.out("rain=" + str(rain) + " " + str(WeatherStation.__config__["rain_unit"]))
+
+        self.out("=" * 40)
+        self.out(end="\n")
         print
 
-    """
 
-    @action(help="Print Filter Wheel information and exit",
-            helpGroup="INFO")
-    def info(self, options):
-
-        self.out("=" * 40)
-        self.out("Filter Wheel: %s (%s)" %
-                 (self.wheel.getLocation(), self.wheel["device"]))
-        self.out("Current Filter:", self.wheel.getFilter())
-
-        self.out("Available filters:", end="")
-        for i, f in enumerate(self.wheel.getFilters()):
-            self.out(str(f), end="")
-        self.out()
-        self.out("=" * 40)
-
-    @action(long="--get-filter", help="Get the current filter name",
-            helpGroup="FILTER_CHANGE", actionGroup="FILTER_CHANGE")
-    def getFilter(self, options):
-        self.out("Current Filter:", self.wheel.getFilter())
-        self.exit()
-
-    @action(name="filtername",
-            short="f",
-            long="--set-filter",
-            type="str",
-            help="Set current filter.",
-            actionGroup="FILTER_CHANGE",
-            helpGroup="FILTER_CHANGE")
-    def changeFilter(self, options):
-
-        if self.options.filtername not in self.wheel.getFilters():
-            self.err("Invalid filter '%s'" % self.options.filtername)
-            self.exit()
-
-        self.out("Changing current filter to %s ..." %
-                 self.options.filtername, end="")
-        try:
-            self.wheel.setFilter(self.options.filtername)
-            self.out("OK")
-        except InvalidFilterPositionException:
-            self.err("ERROR (Invalid Filter)")
-
-
-    """
 
 
 def main():

@@ -19,12 +19,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 # 02110-1301, USA.
 
-from setuptools import setup, find_packages
-
 import os
-import sys
-import glob
-import re
+from setuptools import setup, find_packages
 
 # read version.py file to get version and metadata information
 here = os.path.abspath(os.path.dirname(__file__))
@@ -44,7 +40,8 @@ chimera_scripts = ['src/scripts/chimera',
                    'src/scripts/chimera-sched',
                    'src/scripts/chimera-ppsched',
                    'src/scripts/chimera-taosched',
-]
+                   'src/scripts/chimera-weather',
+                   ]
 
 # platform specific requirements
 platform_deps = []

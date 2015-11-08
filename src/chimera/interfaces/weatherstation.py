@@ -20,10 +20,9 @@
 # 02110-1301, USA.
 
 
-from chimera.core.interface import Interface
 from chimera.core.event import event
+from chimera.core.interface import Interface
 from chimera.util.enum import Enum
-
 
 Unit = Enum("PERCENTUAL",  # Humidity
 
@@ -59,11 +58,11 @@ class WeatherStation (Interface):
 
     __config__ = {"device": "/dev/ttyS0",
 
-                  "humidity_unit": Unit.MM_HG,
+                  "humidity_unit": Unit.PERCENTUAL,
                   "temperature_unit": Unit.CELSIUS,
                   "wind_unit": Unit.KM_PER_H,
                   "dew_point_unit": Unit.CELSIUS,
-                  "pressure_unit": Unit.PERCENTUAL,
+                  "pressure_unit": Unit.MM_HG,
                   "rain_unit": Unit.MM_PER_H,
 
                   "humidity_delta": 1,
