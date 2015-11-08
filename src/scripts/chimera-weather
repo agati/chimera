@@ -35,7 +35,7 @@ class ChimeraWheater(ChimeraCLI):
 
         self.addInstrument(name="weather",
                            cls="WeatherStation",
-                           required=False,
+                           required=False,  # todo verify and change to True
                            help="Weather Station instrument to be used."
                                 "If blank, try to guess from chimera.config",
                            helpGroup="INFO")
@@ -48,6 +48,9 @@ class ChimeraWheater(ChimeraCLI):
         self.out("=" * 40)
         self.out("Weather Station Parameters and Values:", end="\n")
 
+        # todo
+        # change these values to the instrument s ones (WeatherStation.get_humidity()?)
+
         humidity = 60
         temperature = 12
         wind_speed = 5.7
@@ -59,7 +62,7 @@ class ChimeraWheater(ChimeraCLI):
         self.out("humidity=" + str(humidity) + " " + str(WeatherStation.__config__["humidity_unit"]))
         self.out("temperature=" + str(temperature) + " " + str(WeatherStation.__config__["temperature_unit"]))
         self.out("wind_speed=" + str(wind_speed) + " " + str(WeatherStation.__config__["wind_unit"]))
-        self.out("wind_direction=" + str(wind_direction) + " " + "DEGREES")
+        self.out("wind_direction=" + str(wind_direction) + " " + str(WeatherStation.__config__["wind_direction_unit"]))
         self.out("dew_point=" + str(dew_point) + " " + str(WeatherStation.__config__["dew_point_unit"]))
         self.out("pressure=" + str(pressure) + " " + str(WeatherStation.__config__["pressure_unit"]))
         self.out("rain=" + str(rain) + " " + str(WeatherStation.__config__["rain_unit"]))

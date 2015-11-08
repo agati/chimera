@@ -64,6 +64,8 @@ class WeatherStation (Interface):
                   "dew_point_unit": Unit.CELSIUS,
                   "pressure_unit": Unit.MM_HG,
                   "rain_unit": Unit.MM_PER_H,
+                  "wind_direction_unit": Unit.DEG,
+
 
                   "humidity_delta": 1,
                   "temperature_delta": 1,
