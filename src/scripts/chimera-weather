@@ -33,9 +33,9 @@ class ChimeraWheater(ChimeraCLI):
 
         self.addHelpGroup("INFO", "Weather Station Information")
 
-        self.addInstrument(name="weather",
+        self.addInstrument(name="weatherstation",
                            cls="WeatherStation",
-                           required=False,  # todo verify and change to True
+                           required=True,
                            help="Weather Station instrument to be used."
                                 "If blank, try to guess from chimera.config",
                            helpGroup="INFO")
@@ -48,8 +48,9 @@ class ChimeraWheater(ChimeraCLI):
         self.out("=" * 40)
         self.out("Weather Station Parameters and Values:", end="\n")
 
+
         # todo
-        # change these values to the instrument s ones (WeatherStation.get_humidity()?)
+        # change these values to the instrument s ones (ex: WeatherStation.get_humidity()?)
 
         humidity = 60
         temperature = 12
@@ -69,8 +70,6 @@ class ChimeraWheater(ChimeraCLI):
 
         self.out("=" * 40)
         self.out(end="\n")
-        print
-
 
 
 
