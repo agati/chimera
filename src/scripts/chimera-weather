@@ -23,7 +23,6 @@
 import sys
 
 from chimera.core.cli import ChimeraCLI, action
-from chimera.interfaces.weatherstation import WeatherStation
 
 
 class ChimeraWheater(ChimeraCLI):
@@ -45,29 +44,28 @@ class ChimeraWheater(ChimeraCLI):
             helpGroup="INFO",
             help="Displays available parameters names and its respective values.")
     def info(self, options):
-        self.out("=" * 40)
+        self.out("=" * 60)
         self.out("Weather Station Parameters and Values:", end="\n")
 
-        # todo
-        # change these values to the instrument s ones (ex: WeatherStation.get_humidity()?)
+        w = self.weatherstation
 
-        humidity = WeatherStation.humidity()
-        temperature = WeatherStation.temperature()
-        wind_speed = WeatherStation.wind_speed()
-        wind_direction = WeatherStation.wind_direction()
-        dew_point = WeatherStation.dew_point()
-        pressure = WeatherStation.pressure()
-        rain = WeatherStation.rain()
+        humidity = w.humidity()
+        temperature = w.temperature()
+        wind_speed = w.wind_speed()
+        wind_direction = w.wind_direction()
+        dew_point = w.dew_point()
+        pressure = w.pressure()
+        rain = w.rain()
 
-        self.out("humidity=" + str(humidity) + " " + str(WeatherStation.__config__["humidity_unit"]))
-        self.out("temperature=" + str(temperature) + " " + str(WeatherStation.__config__["temperature_unit"]))
-        self.out("wind_speed=" + str(wind_speed) + " " + str(WeatherStation.__config__["wind_unit"]))
-        self.out("wind_direction=" + str(wind_direction) + " " + str(WeatherStation.__config__["wind_direction_unit"]))
-        self.out("dew_point=" + str(dew_point) + " " + str(WeatherStation.__config__["dew_point_unit"]))
-        self.out("pressure=" + str(pressure) + " " + str(WeatherStation.__config__["pressure_unit"]))
-        self.out("rain=" + str(rain) + " " + str(WeatherStation.__config__["rain_unit"]))
+        self.out('Humidity: %.2f %% @ %s.' % (humidity.value, humidity.time))
+        self.out('Temperature: %.2f %s @ %s.' % (temperature.value, temperature.unit, temperature.time))
+        self.out('Wind Speed: %.2f %s @ %s.' % (wind_speed.value, wind_speed.unit, wind_speed.time))
+        self.out('Wind Direction: %.2f %s @ %s.' % (wind_direction.value, wind_direction.unit, wind_direction.time))
+        self.out('Dew Point: %.2f %s @ %s.' % (dew_point.value, dew_point.unit, dew_point.time))
+        self.out('Pressure: %.2f %s @ %s.' % (pressure.value, pressure.unit, pressure.time))
+        self.out('Rain: %.2f %s @ %s.' % (rain.value, rain.unit, rain.time))
 
-        self.out("=" * 40)
+        self.out("=" * 60)
         self.out(end="\n")
 
 
