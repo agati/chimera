@@ -120,6 +120,8 @@ for val in data:
 
             except IndexError:
                 moon.append(html.find_all('td')[19])
+                interlock_reason.append("none")
+
 
         if val['id'] == '#site-tfn-time':
             last_time = val['val']
